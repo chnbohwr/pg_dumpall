@@ -1,9 +1,16 @@
-FROM postgres:9.4
-MAINTAINER Ilya Stepanov <dev@ilyastepanov.com>
+FROM postgres
 
 RUN apt-get update && \
-    apt-get install -y cron && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get install -y cron
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+    
+RUN TZ=Asia/Taipei \
+    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone \
+    && dpkg-reconfigure -f noninteractive tzdata 
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ADD dump.sh /dump.sh
 RUN chmod +x /dump.sh

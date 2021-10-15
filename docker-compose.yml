@@ -1,0 +1,13 @@
+version: '3.4'
+services:
+  pg_dump:
+    image: chnbohwr/pg_dumpall
+    volumes:
+      - ./dump:/dump
+    environment:
+      CRON_SCHEDULE: "5 14 * * *"
+      PGUSER: postgres
+      PGPASSWORD: xxxxxxxx
+      PGHOST: 10.150.1.244
+      EXPIRE_DAYS: 30
+    command: dump-cron

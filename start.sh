@@ -4,8 +4,9 @@ set -e
 
 COMMAND=${1:-dump}
 CRON_SCHEDULE=${CRON_SCHEDULE:-0 1 * * *}
-PREFIX=${PREFIX:-dump}
 PGUSER=${PGUSER:-postgres}
+PGHOST=${PGHOST:-localhost}
+EXPIRE_DAYS=${EXPIRE_DAYS:-10}
 
 if [[ "$COMMAND" == 'dump' ]]; then
     exec /dump.sh
@@ -14,7 +15,7 @@ elif [[ "$COMMAND" == 'dump-cron' ]]; then
     if [[ ! -e "$LOGFIFO" ]]; then
         mkfifo "$LOGFIFO"
     fi
-    CRON_ENV="PREFIX='$PREFIX'\nPGUSER='$PGUSER'"
+    CRON_ENV="PGUSER='$PGUSER'\nPGHOST='$PGHOST'\nEXPIRE_DAYS='$EXPIRE_DAYS'"
     if [ -n "$PGPASSWORD" ]; then
         CRON_ENV="$CRON_ENV\nPGPASSWORD='$PGPASSWORD'"
     fi
